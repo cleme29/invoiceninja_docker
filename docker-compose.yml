@@ -4,7 +4,7 @@ services:
   server:
     image: nginx
     restart: always
-    env_file: env
+    env_file: stack.env
     volumes:
       # Vhost configuration
       #- ./config/caddy/Caddyfile:/etc/caddy/Caddyfiledocker-com
@@ -24,7 +24,7 @@ services:
 
   app:
     image: invoiceninja/invoiceninja:5
-    env_file: env
+    env_file: stack.env
     restart: always
     volumes:
       - ./config/hosts:/etc/hosts:ro
@@ -50,7 +50,7 @@ services:
     ports:
       - "3305:3306"
     restart: always
-    env_file: env
+    env_file: stack.env
     volumes:
       - ./docker/mysql/data:/var/lib/mysql:rw,delegated
 
@@ -64,26 +64,6 @@ services:
     extra_hosts:
       - "in5.localhost:192.168.0.124 " #host and ip
 
-  # THIS IS ONLY A VALID CONFIGURATION FOR IN 4. DO NOT USE FOR IN 5.
-  # cron:
-  #   image: invoiceninja/invoiceninja:alpine-4
-  #   volumes:
-      # - ./docker/app/public:/var/www/app/public:rw,delegated
-      # - ./docker/app/storage:/var/www/app/storage:rw,delegated
-      # - ./docker/app/public/logo:/var/www/app/public/logo:rw,delegated
-  #   entrypoint: |
-  #     /bin/sh -c 'sh -s <<EOF
-  #     trap "break;exit" SIGHUP SIGINT SIGTERM
-  #     sleep 300s
-  #     while /bin/true; do
-  #       ./artisan ninja:send-invoices
-  #       ./artisan ninja:send-reminders
-  #       sleep 1d
-  #     done
-  #     EOF'
-  #   networks:
-  #     - invoiceninja
-  #
 
 networks:
   invoiceninja:
